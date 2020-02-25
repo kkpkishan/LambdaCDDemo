@@ -1,4 +1,4 @@
-#Serverless CI/CD pipeline in AWS using Lambda
+# Serverless CI/CD pipeline in AWS using Lambda
 
 Having a CI/CD pipeline setup for your project, has become more and more crucial for both developers and Product Owners.
 
