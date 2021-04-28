@@ -163,35 +163,39 @@ Resources:
 #            FunctionName: cfn-nag-pipeline
 #            UserParameters: outputSamTemplate.yaml
 #          RunOrder: 1
-        - Name: CreateChangeSet
-          InputArtifacts:
-          - Name: PackageOutput
+      - Name: CreateChangeSet
+        Actions:
+        - Name: ChangeSet
           ActionTypeId:
             Category: Deploy
             Owner: AWS
             Version: 1
             Provider: CloudFormation
+          InputArtifacts:
+          - Name: PackageOutput
           Configuration:
             ActionMode: CHANGE_SET_REPLACE
             Capabilities: CAPABILITY_IAM
-            StackName: sample-app
+            StackName: !Ref BranchName
             TemplatePath: PackageOutput::outputSamTemplate.yaml
-            ChangeSetName: sample-app-deployment
+            ChangeSetName: !Sub ${BranchName}-deployment
             RoleArn: !GetAtt CloudFormationRole.Arn
           RunOrder: 2
+      - Name: ExecuteChangeSet
+        Actions:
         - Name: ExecuteChangeSet
-          InputArtifacts:
-          - Name: PackageOutput
           ActionTypeId:
             Category: Deploy
             Owner: AWS
             Version: 1
             Provider: CloudFormation
+          InputArtifacts:
+          - Name: PackageOutput
           Configuration:
             ActionMode: CHANGE_SET_EXECUTE
-            StackName: sample-app
-            ChangeSetName: sample-app-deployment
-          RunOrder: 3 
+            StackName: !Ref BranchName
+            ChangeSetName: !Sub ${BranchName}-deployment
+          RunOrder: 3
       ArtifactStore:
         Type: S3
         Location: !Ref PipelineBucket
@@ -396,7 +400,7 @@ Resources:
             - cloudformation:ExecuteChangeSet
             - cloudformation:DeleteChangeSet
             Resource: 
-            - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/sample-app/*
+            - !Sub arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${BranchName}/*
             Effect: Allow
           - Action:
             - iam:PassRole
