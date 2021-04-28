@@ -149,20 +149,6 @@ Resources:
           Configuration:
             ProjectName: !Ref CodeBuildPackage
           RunOrder: 1
-#      - Name: Deploy
-#        Actions:
-#        - Name: CfnNag
-#          ActionTypeId:
-#            Category: Invoke
-#            Owner: AWS
-#            Version: '1'
-#            Provider: Lambda
-#          InputArtifacts:
-#          - Name: PackageOutput
-#          Configuration:
-#            FunctionName: cfn-nag-pipeline
-#            UserParameters: outputSamTemplate.yaml
-#          RunOrder: 1
       - Name: CreateChangeSet
         Actions:
         - Name: ChangeSet
